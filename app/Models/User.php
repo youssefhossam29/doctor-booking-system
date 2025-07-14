@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Enums\UserType;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type'
     ];
 
     /**
@@ -43,4 +45,36 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'type' => UserType::class,
     ];
+
+    /**
+     * Get the doctor associated with the User.
+     */
+    public function doctor(): HasOne
+    {
+        return $this->hasOne(Doctor::class, 'user_id');
+    }
+
+    /**
+     * Get the admin associated with the User.
+     */
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class, 'user_id');
+    }
+
+    /**
+     * Get the patient associated with the User.
+     */
+    public function patient(): HasOne
+    {
+        return $this->hasOne(Patient::class, 'user_id');
+    }
+
+    /**
+     * Get the readable type name of the user.
+     */
+    public function getTypeNameAttribute(): string
+    {
+        return $this->type->name;
+    }
 }
