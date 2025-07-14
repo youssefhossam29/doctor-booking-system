@@ -34,4 +34,16 @@ class Patient extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+
+    public function getGenderTypeAttribute()
+    {
+        if ($this->gender === null) {
+            return 'Not selected';
+        } elseif ($this->gender == 1) {
+            return 'Male';
+        } elseif ($this->gender == 0) {
+            return 'Female';
+        }
+        return 'Not selected';
+    }
 }
