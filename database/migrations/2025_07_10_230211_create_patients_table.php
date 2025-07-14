@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->date('date_of_birth')->nullable();
             $table->string('image')->nullable();
-            $table->tinyInteger('gender')->default(0);
+            $table->Boolean('gender')->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();
         });
