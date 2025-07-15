@@ -18,7 +18,7 @@ class PatientResource extends JsonResource
         return [
             'id'    => $this->id,
             'user'  => new UserResource($this->user),
-            'image' => $this->image,
+            'image' => 'uploads/users/' . $this->image,
             'date_of_birth' => optional($this->date_of_birth)->toDateTimeString(),
             'gender' => $this->gender_type,
             'phone' => $this->phone,

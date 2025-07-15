@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use App\Enums\UserType;
 use App\Models\Patient;
@@ -34,11 +35,18 @@ class RegisterController extends Controller
         $token = $user->createToken('Doctor-Booking-System')->plainTextToken;
         $data  = ['token' => $token];
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $newImage = $this->handleImageUpload($image);
+        }
+
         if ($type === UserType::DOCTOR) {
             $doctor = Doctor::create([
                 'user_id'           => $user->id,
                 'specialization_id' => $request->specialization_id,
-                'image'             => $request->image ?? "avatar.png",
+                'image'             => $newImage ?? "doctor.png",
+                'bio'               => $request->bio,
+                'phone'             => $request->phone,
             ]);
 
             $data['user'] = new DoctorResource($doctor);
@@ -48,15 +56,16 @@ class RegisterController extends Controller
                 'user_id'       => $user->id,
                 'date_of_birth' => $request->date_of_birth ?? null,
                 'gender'        => $request->gender ?? null,
-                'image'         => $request->image ?? "avatar.png",
+                'image'         => $newImage ?? "patient.png",
+                'phone'             => $request->phone,
             ]);
 
-            $data['user'] = new PatientResource($patient);
+            $data['user'] = new PatientResource($paient);
 
         } elseif ($type === UserType::ADMIN) {
             $admin = Admin::create([
                 'user_id' => $user->id,
-                'image'   => $request->image ?? "avatar.png",
+                'image'   => $newImage ?? "admin.png",
             ]);
 
             $data['user'] = new AdminResource($admin);
@@ -65,4 +74,11 @@ class RegisterController extends Controller
         return apiResponse($data, "Account created successfully", 201);
     }
 
+
+    public function handleImageUpload($image)
+    {
+        $imageName = Str::random(10) . '_' . time() . '.' . $image->getClientOriginalExtension();
+        $image->move('uploads/users/', $imageName);
+        return $imageName;
+    }
 }

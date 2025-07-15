@@ -19,7 +19,7 @@ class DoctorResource extends JsonResource
         return [
             'id'              => $this->id,
             'user'            => new UserResource($this->user),
-            'image'           => $this->image,
+            'image'           => 'uploads/users/' . $this->image,
             'bio'             => $this->bio,
             'phone'           => $this->phone,
             'specialization'  =>  new SpecializationResource($this->specialization),

@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-use Illuminate\Validation\Rule;
-use App\Enums\UserType;
-
 class LoginRequest extends FormRequest
 {
     /**
@@ -33,7 +30,6 @@ class LoginRequest extends FormRequest
             //
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            // 'type' => ['required', Rule::in(UserType::cases())],
         ];
     }
 

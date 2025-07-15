@@ -38,6 +38,8 @@ class RegisterRequest extends FormRequest
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp|max:2048'],
             'gender' => ['nullable', 'in:0,1'],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string',
         ];
     }
 }
