@@ -29,7 +29,7 @@ Route::middleware('guest')->group(function () {
 });
 
 
-// Protected Routes
+// Auth Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
@@ -37,3 +37,43 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->name('logout');
 });
 
+
+
+// Doctor Routes
+Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name('doctor.')->group(function () {
+
+    // Profile Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\DoctorProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+
+});
+
+
+
+// Admin Routes
+Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Profile Routes
+    Route::controller(App\Http\Controllers\Api\Admin\AdminProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+
+});
+
+
+// Patient Routes
+Route::middleware(['auth:sanctum', 'CheckTypes:patient'])->prefix('patient')->name('patient.')->group(function () {
+
+    // Profile Routes
+    Route::controller(App\Http\Controllers\Api\Patient\PatientProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+
+});
