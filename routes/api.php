@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Public Routes
 Route::middleware('guest')->group(function () {
-    Route::post('register', [RegisterController::class, 'store'])->name('register');
+    Route::post('register', [RegisterController::class, 'storePatient'])->name('register.patient');
     Route::post('login', [LoginController::class, 'store'])->name('login');
 });
 
@@ -61,6 +61,11 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::get('/', 'show')->name('show');
         Route::put('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('register')->name('register.')->group(function () {
+        Route::post('/doctor', [RegisterController::class, 'storeDoctor'])->name('doctor');
+        Route::post('/admin', [RegisterController::class, 'storeAdmin'])->name('admin');
     });
 
 });
