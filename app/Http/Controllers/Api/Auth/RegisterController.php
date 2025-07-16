@@ -7,18 +7,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\Auth\StoreAdminRequest;
 use App\Http\Requests\Api\Auth\StoreDoctorRequest;
 use App\Http\Requests\Api\Auth\StorePatientRequest;
 
 use App\Enums\UserType;
 use App\Models\Patient;
 use App\Models\Doctor;
-use App\Models\Admin;
 use App\Models\User;
 
 use App\Http\Resources\DoctorResource;
-use App\Http\Resources\AdminResource;
 use App\Http\Resources\PatientResource;
 
 class RegisterController extends Controller
@@ -46,24 +43,6 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'type'     => $type,
         ]);
-    }
-
-
-    public function storeAdmin(StoreAdminRequest $request)
-    {
-        $user = $this->createUser($request, UserType::ADMIN);
-
-        $imageName = $this->handleImageUpload($request);
-        $admin = Admin::create([
-            'user_id' => $user->id,
-            'image'   => $imageName ?? "admin.png",
-        ]);
-
-        $token = $user->createToken('Doctor-Booking-System')->plainTextToken;
-        $data  = ['token' => $token];
-        $data['user'] = new AdminResource($admin);
-
-        return apiResponse($data, "Account created successfully", 201);
     }
 
 

@@ -4,13 +4,19 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 use App\Http\Requests\Api\Auth\UpdateAdminRequest;
+use App\Http\Requests\Api\Auth\StoreAdminRequest;
 use App\Http\Resources\AdminResource;
+use App\Enums\UserType;
+use App\Models\User;
+use App\Models\Admin;
 
 class AdminController extends Controller
 {
@@ -28,6 +34,32 @@ class AdminController extends Controller
         $imageName = Str::random(10) . '_' . time() . '.' . $image->getClientOriginalExtension();
         $image->move('uploads/users/', $imageName);
         return $imageName;
+    }
+
+
+    public function store(StoreAdminRequest $request)
+    {
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'type'     => UserType::ADMIN,
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $this->handleImageUpload($image);
+        }
+
+        $admin = Admin::create([
+            'user_id' => $user->id,
+            'image'   => $imageName ?? "admin.png",
+        ]);
+
+        $token = $user->createToken('Doctor-Booking-System')->plainTextToken;
+        $admin = new AdminResource($admin);
+
+        return apiResponse($admin, "Account created successfully", 201);
     }
 
 
