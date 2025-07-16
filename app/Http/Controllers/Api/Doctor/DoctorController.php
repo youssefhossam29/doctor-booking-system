@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\File;
 use App\Http\Requests\Api\Auth\UpdateDoctorRequest;
 use App\Http\Resources\DoctorResource;
 
-class DoctorProfileController extends Controller
+class DoctorController extends Controller
 {
     //
     public function show(){

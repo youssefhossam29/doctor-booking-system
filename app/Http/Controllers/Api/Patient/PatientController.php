@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
-use App\Http\Requests\Api\Auth\UpdateAdminRequest;
-use App\Http\Resources\AdminResource;
+use App\Http\Requests\Api\Auth\UpdatePatientRequest;
+use App\Http\Resources\PatientResource;
 
-class AdminProfileController extends Controller
+class PatientController extends Controller
 {
     //
     public function show(){
         $user = auth()->user();
-        $admin = $user->admin;
-        $admin = new AdminResource($admin);
-        return apiResponse($admin, "Admin Fetched successfully.", 200);
+        $patient = $user->patient;
+        $patient = new PatientResource($patient);
+        return apiResponse($patient, "Patient Fetched successfully.", 200);
     }
 
 
@@ -45,29 +45,32 @@ class AdminProfileController extends Controller
     }
 
 
-    public function update(UpdateAdminRequest $request)
+    public function update(UpdatePatientRequest $request)
     {
         $user = $this->updateUserData($request->validated());
-        $admin = $user->admin;
+        $patient = $user->patient;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $old_image = $admin->image;
-            $old_image_path = 'uploads/users/' . $admin->image;
+            $old_image = $patient->image;
+            $old_image_path = 'uploads/users/' . $patient->image;
 
             $newImage = $this->handleImageUpload($image);
-            $admin->image = $newImage;
+            $patient->image = $newImage;
 
-            if (File::exists($old_image_path) && $old_image != "admin.png") {
+            if (File::exists($old_image_path) && $old_image != "patient.png") {
                 File::delete($old_image_path);
             }
-            $admin->save();
         }
 
-        $admin = new AdminResource($admin);
-        return apiResponse($admin, "Profile updated successfully.", 200);
-    }
+        $patient->phone = $request->input('phone', $patient->phone);
+        $patient->date_of_birth = $request->input('date_of_birth', $patient->date_of_birth);
+        $patient->gender = $request->input('gender', $patient->gender);
+        $patient->save();
 
+        $patient = new PatientResource($patient);
+        return apiResponse($patient, "Profile updated successfully.", 200);
+    }
 
 
     public function destroy(Request $request){
@@ -80,10 +83,10 @@ class AdminProfileController extends Controller
         }
 
         $user = $request->user();
-        $admin = $user->admin;
+        $patient = $user->patient;
 
-        if ($admin && $admin->image !== 'admin.png') {
-            $imagePath = 'uploads/users/' . $admin->image;
+        if ($patient && $patient->image !== 'patient.png') {
+            $imagePath = 'uploads/users/' . $patient->image;
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
             }
