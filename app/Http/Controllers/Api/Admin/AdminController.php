@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Requests\Api\Auth\UpdateAdminRequest;
-use App\Http\Requests\Api\Auth\StoreAdminRequest;
+use App\Http\Requests\Api\Admin\UpdateAdminRequest;
+use App\Http\Requests\Api\Admin\StoreAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Enums\UserType;
 use App\Models\User;

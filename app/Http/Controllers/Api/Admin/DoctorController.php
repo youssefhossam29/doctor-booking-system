@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Requests\Api\Auth\StoreDoctorRequest;
+use App\Http\Requests\Api\Admin\StoreDoctorRequest;
 use App\Http\Resources\DoctorResource;
 use App\Enums\UserType;
 use App\Models\User;

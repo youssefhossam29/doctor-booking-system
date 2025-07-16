@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Auth;
+namespace App\Http\Requests\Api\Doctor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
-class UpdatePatientRequest extends FormRequest
+class UpdateDoctorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,8 +30,7 @@ class UpdatePatientRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp|max:2048'],
             'phone' => 'nullable|string|max:20',
-            'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender' => [ 'in:0,1'],
+            'bio' => 'nullable|string',
         ];
     }
 }
