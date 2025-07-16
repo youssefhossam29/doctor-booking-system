@@ -45,7 +45,7 @@ class DoctorProfileController extends Controller
     }
 
 
-    public function update(UpdateDoctorProfileRequest $request)
+    public function update(UpdateDoctorRequest $request)
     {
         $user = $this->updateUserData($request->validated());
         $doctor = $user->doctor;

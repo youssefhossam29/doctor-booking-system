@@ -45,7 +45,7 @@ class AdminProfileController extends Controller
     }
 
 
-    public function update(UpdateAdminProfileRequest $request)
+    public function update(UpdateAdminRequest $request)
     {
         $user = $this->updateUserData($request->validated());
         $admin = $user->admin;
