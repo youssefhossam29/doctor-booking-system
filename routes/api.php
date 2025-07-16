@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
 // Admin Routes
 Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Profile Routes
+    // Admin Profile Routes
     Route::controller(App\Http\Controllers\Api\Admin\AdminController::class)->group(function () {
         Route::get('/', 'show')->name('show');
         Route::post('/', 'store')->name('store');
@@ -64,8 +64,8 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/', 'destroy')->name('destroy');
     });
 
-    Route::prefix('register')->name('register.')->group(function () {
-        Route::post('/doctor', [RegisterController::class, 'storeDoctor'])->name('doctor');
+    Route::controller(App\Http\Controllers\Api\Admin\DoctorController::class)->prefix('doctor')->name('doctor.')->group(function () {
+        Route::post('/', 'store')->name('store');
     });
 
 });

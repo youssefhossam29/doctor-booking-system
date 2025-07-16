@@ -56,7 +56,6 @@ class AdminController extends Controller
             'image'   => $imageName ?? "admin.png",
         ]);
 
-        $token = $user->createToken('Doctor-Booking-System')->plainTextToken;
         $admin = new AdminResource($admin);
 
         return apiResponse($admin, "Account created successfully", 201);

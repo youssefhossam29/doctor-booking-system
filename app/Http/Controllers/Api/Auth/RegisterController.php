@@ -7,15 +7,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\Auth\StoreDoctorRequest;
 use App\Http\Requests\Api\Auth\StorePatientRequest;
 
 use App\Enums\UserType;
 use App\Models\Patient;
-use App\Models\Doctor;
 use App\Models\User;
-
-use App\Http\Resources\DoctorResource;
 use App\Http\Resources\PatientResource;
 
 class RegisterController extends Controller
@@ -43,27 +39,6 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'type'     => $type,
         ]);
-    }
-
-
-    public function storeDoctor(StoreDoctorRequest $request)
-    {
-        $user = $this->createUser($request, UserType::DOCTOR);
-
-        $imageName = $this->handleImageUpload($request);
-        $doctor = Doctor::create([
-            'user_id'           => $user->id,
-            'specialization_id' => $request->specialization_id,
-            'image'             => $imageName ?? "doctor.png",
-            'bio'               => $request->bio,
-            'phone'             => $request->phone,
-        ]);
-
-        $token = $user->createToken('Doctor-Booking-System')->plainTextToken;
-        $data  = ['token' => $token];
-        $data['user'] = new DoctorResource($doctor);
-
-        return apiResponse($data, "Account created successfully", 201);
     }
 
 
