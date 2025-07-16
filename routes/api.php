@@ -64,8 +64,13 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/', 'destroy')->name('destroy');
     });
 
-    Route::controller(App\Http\Controllers\Api\Admin\DoctorController::class)->prefix('doctor')->name('doctor.')->group(function () {
+    Route::controller(App\Http\Controllers\Api\Admin\DoctorController::class)->prefix('doctors')->name('doctors.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
         Route::post('/', 'store')->name('store');
+        Route::get('/{doctor}', 'show')->name('show');
+        Route::put('/{doctor}', 'update')->name('update');
+        Route::delete('/{doctor}', 'destroy')->name('destroy');
     });
 
 });
