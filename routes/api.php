@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/', 'destroy')->name('destroy');
     });
 
+    // Doctor Profile Routes
     Route::controller(App\Http\Controllers\Api\Admin\DoctorController::class)->prefix('doctors')->name('doctors.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/search', 'search')->name('search');
@@ -73,6 +74,15 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/{doctor}', 'destroy')->name('destroy');
     });
 
+    // Specialization Profile Routes
+    Route::controller(App\Http\Controllers\Api\Admin\SpecializationController::class)->prefix('specializations')->name('specializations.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{specialization}', 'show')->name('show');
+        Route::put('/{specialization}', 'update')->name('update');
+        Route::delete('/{specialization}', 'destroy')->name('destroy');
+        Route::get('/{specialization}/doctors', 'doctors')->name('doctors');
+    });
 });
 
 
