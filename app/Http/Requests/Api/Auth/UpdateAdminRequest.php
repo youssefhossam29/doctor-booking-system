@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Profile;
+namespace App\Http\Requests\Api\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
-class UpdateAdminProfileRequest extends FormRequest
+class UpdateAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
-use App\Http\Requests\Api\Profile\UpdatePatientProfileRequest;
+use App\Http\Requests\Api\Auth\UpdatePatientRequest;
 use App\Http\Resources\PatientResource;
 
 class PatientProfileController extends Controller

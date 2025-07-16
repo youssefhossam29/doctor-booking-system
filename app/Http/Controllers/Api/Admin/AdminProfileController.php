@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
-use App\Http\Requests\Api\Profile\UpdateAdminProfileRequest;
+use App\Http\Requests\Api\Auth\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
 
 class AdminProfileController extends Controller
