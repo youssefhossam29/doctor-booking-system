@@ -18,8 +18,19 @@ class AppointmentResource extends JsonResource
     {
         return [
             'id'        => $this->id,
-            'doctor'    => new DoctorResource($this->doctor),
-            'patient'   => new PatientResource($this->patient),
+            //'doctor'    => new DoctorResource($this->doctor),
+            //'patient'   => new PatientResource($this->patient),
+            'doctor'    => [
+                'id' => $this->doctor_id,
+                'name' => $this->doctor->user->name,
+                'image' => $this->doctor->image,
+                'specialization' => $this->doctor->specialization->name,
+            ],
+            'patient'    => [
+                'id' => $this->patient_id,
+                'name' => $this->patient->user->name,
+                'image' => $this->patient->image,
+            ],
             'date'      => $this->appointment_date,
             'time'      => $this->appointment_time,
             'status'    => $this->status,
