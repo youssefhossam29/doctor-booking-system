@@ -44,6 +44,14 @@ class Doctor extends Model
     }
 
     /**
+     * Get all of the slots for the doctor
+     */
+    public function slots(): HasMany
+    {
+        return $this->hasMany(DoctorSlot::class);
+    }
+
+    /**
      * Get all of the appointments for the doctor
      */
     public function appointments(): HasMany

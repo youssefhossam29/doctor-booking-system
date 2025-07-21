@@ -15,9 +15,11 @@ class ScheduleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'day_of_week'    => $this->day_of_week,
-            'available_from' => $this->available_from,
-            'available_to'   => $this->available_to,
+            'id' => $this->id,
+            'day_of_week' => $this->day_of_week,
+            'start_time' => $this->start_time,
+            'end_time' => $this->end_time,
+            'slot_duration' => $this->slot_duration,
         ];
     }
 }

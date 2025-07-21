@@ -20,8 +20,9 @@ class ScheduleFactory extends Factory
             'day_of_week' => fake()->randomElement([
                 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
             ]),
-            'available_from' => '9:00:00',
-            'available_to' => '17:00:00'
+            'start_time' => '9:00:00',
+            'end_time' => '11:00:00',
+            'slot_duration' => '30'
         ];
     }
 

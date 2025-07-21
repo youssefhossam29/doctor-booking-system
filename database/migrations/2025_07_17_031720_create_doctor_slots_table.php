@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('doctor_slots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->unsignedTinyInteger('slot_duration')->default(30);
-            $table->enum('day_of_week', ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
-            $table->unique(['doctor_id', 'day_of_week']);
+            $table->boolean('is_available')->default(1);
             $table->timestamps();
+            $table->unique(['doctor_id', 'date', 'start_time']);
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('doctor_slots');
     }
 };
