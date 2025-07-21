@@ -61,7 +61,6 @@ class DoctorController extends Controller
                     $q->where('name', 'LIKE', "%{$search}%");
                 });
             })
-            ->with(['user', 'specialization'])
             ->orderBy('created_at', 'DESC')
             ->get();
 

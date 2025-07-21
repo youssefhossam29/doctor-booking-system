@@ -57,7 +57,6 @@ class PatientController extends Controller
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
             })
-            ->with('user')
             ->orderBy('created_at', 'DESC')
             ->get();
 
