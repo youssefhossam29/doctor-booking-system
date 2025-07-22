@@ -108,6 +108,21 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/', 'destroyByDoctorAndDate')->name('destroy.byDoctor.andDate');
         Route::delete('/{doctorSlot}', 'destroy')->name('destroy');
     });
+
+
+    // Appointment Routes
+    Route::controller(App\Http\Controllers\Api\Admin\AppointmentController::class)->prefix('appointments')->name('appointments.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/between-dates', 'appointmentsBetweenDates')->name('appointments.betweenDates');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{appointment}', 'show')->name('show');
+        Route::put('/{appointment}', 'update')->name('update');
+        Route::delete('/{appointment}', 'destroy')->name('destroy');
+        Route::get('/doctor/{doctor}',  'indexByDoctor');
+        Route::get('/patient/{patient}',  'indexByPatient');
+        Route::get('/doctor/{doctor}/patient/{patient}',  'indexByDoctorAndPatient');
+    });
 });
 
 

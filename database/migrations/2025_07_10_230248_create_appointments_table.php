@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->string('notes')->nullable();
             $table->timestamps();
+            $table->unique(['doctor_id', 'appointment_date', 'appointment_time']);
+            $table->unique(['patient_id', 'appointment_date', 'appointment_time']);
         });
     }
 

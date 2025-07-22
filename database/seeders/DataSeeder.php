@@ -48,16 +48,24 @@ class DataSeeder extends Seeder
             'image'   => 'admin.png',
         ]);
 
+        // Create patients
+        User::factory(10)->state([
+            'type' => UserType::PATIENT,
+        ])->create()->each(function ($user) {
+            Patient::factory()->create(['user_id' => $user->id]);
+        });
 
-        // create 5 doctor users, each with 3 schedules and slots
+        $patients = Patient::pluck('id');
+
+        // Create doctors + schedules + slots + appointments
         User::factory(5)->state([
             'type' => UserType::DOCTOR,
-        ])->create()->each(function ($user){
+        ])->create()->each(function ($user) use ($patients) {
             $doctor = Doctor::factory()->create(['user_id' => $user->id]);
 
             $days = collect([
                 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
-            ])->shuffle()->take(3);
+            ])->shuffle()->take(2);
 
             foreach ($days as $day) {
                 $schedule = Schedule::factory()->create([
@@ -85,18 +93,30 @@ class DataSeeder extends Seeder
                     $start = $slotEnd;
                 }
             }
+
+            // Get 4 available slots for this doctor
+            $availableSlots = DoctorSlot::where('doctor_id', $doctor->id)
+                ->where('is_available', 1)
+                ->inRandomOrder()
+                ->limit(4)
+                ->get();
+
+            foreach ($availableSlots as $slot) {
+                $patientId = $patients->random();
+
+                // Create appointment
+                Appointment::create([
+                    'doctor_id'        => $doctor->id,
+                    'patient_id'       => $patientId,
+                    'appointment_date' => $slot->date,
+                    'appointment_time' => $slot->start_time,
+                    'status'           => 'pending',
+                    'notes'            => fake()->optional()->sentence(),
+                ]);
+
+                // Mark slot as unavailable
+                $slot->update(['is_available' => 0]);
+            }
         });
-
-
-        // create 5 patient users, foreach create 5 schedules
-        User::factory(5)->state([
-            'type' => UserType::PATIENT,
-        ])->create()->each(function ($user){
-            Patient::factory()->create(['user_id' => $user->id]);
-        });
-
-
-        Appointment::factory(30)->create();
-
     }
 }
