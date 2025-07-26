@@ -31,7 +31,7 @@ class DoctorController extends Controller
 
     public function index()
     {
-        $doctors = Doctor::latest()->get();
+        $doctors = Doctor::with('specialization', 'user')->get();
         if ($doctors->isEmpty()) {
             return apiResponse([], "No doctors found.", 200);
         }
@@ -53,8 +53,9 @@ class DoctorController extends Controller
         }
 
         $search = $request->input('search');
-        $doctors = Doctor::where(function ($query) use ($search) {
-            $query->whereHas('user', function ($q) use ($search) {
+        $doctors = Doctor::with(['user', 'specialization'])
+            ->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 })
                 ->orWhereHas('specialization', function ($q) use ($search) {

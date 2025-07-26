@@ -15,10 +15,10 @@ class SlotController extends Controller
     {
         $validated = $request->validate([
             'doctor_id' => ['required', 'exists:doctors,id'],
-            'date'      => ['required', 'date'],
+            'date'      => ['required', 'date', 'date_format:Y-m-d'],
         ]);
 
-        $doctor = Doctor::findOrFail($validated['doctor_id']);
+        $doctor = Doctor::with(['user', 'specialization'])->findOrFail($validated['doctor_id']);
 
         $slots = DoctorSlot::where('doctor_id', $doctor->id)
             ->where('date', $validated['date'])
@@ -38,7 +38,6 @@ class SlotController extends Controller
         ];
 
         return apiResponse($response, "Slots fetched successfully for {$validated['date']}", 200);
-
     }
 
 

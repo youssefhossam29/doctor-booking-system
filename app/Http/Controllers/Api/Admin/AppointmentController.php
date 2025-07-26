@@ -23,7 +23,12 @@ class AppointmentController extends Controller
      * Display a listing of the resource.
      */
     public function index(){
-        $appointments = Appointment::latest()->get();
+        $appointments = Appointment::with([
+            'doctor.user',
+            'doctor.specialization',
+            'patient.user',
+        ])->latest()->get();
+
         if ($appointments->isEmpty()) {
             return apiResponse([], "No appointments found.", 200);
         }
@@ -44,16 +49,21 @@ class AppointmentController extends Controller
         }
 
         $search = $request->input('search');
-        $appointments = Appointment::where(function ($query) use ($search) {
-            $query->whereHas('patient.user', function ($q) use ($search) {
+        $appointments = Appointment::with([
+                'doctor.user',
+                'doctor.specialization',
+                'patient.user',
+            ])
+            ->where(function ($query) use ($search) {
+                $query->whereHas('patient.user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 })
                 ->orWhereHas('doctor.user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 });
-        })
-        ->orderBy('created_at', 'DESC')
-        ->get();
+            })
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         if ($appointments->isEmpty()) {
             return apiResponse([], "No results found for: $search", 200);
@@ -78,7 +88,12 @@ class AppointmentController extends Controller
         $from = $request->input('from_date');
         $to = $request->input('to_date');
 
-        $appointments = Appointment::whereBetween('appointment_date', [$from, $to])
+        $appointments = Appointment::with([
+                'doctor.user',
+                'doctor.specialization',
+                'patient.user',
+            ])
+            ->whereBetween('appointment_date', [$from, $to])
             ->orderBy('appointment_date', 'ASC')
             ->get();
 
@@ -156,54 +171,64 @@ class AppointmentController extends Controller
     public function indexByPatient(Patient $patient)
     {
         $appointments = $patient->appointments()
+            ->with([
+                'doctor.user',
+                'doctor.specialization',
+                'patient.user',
+            ])
             ->orderBy('appointment_date')
             ->orderBy('appointment_time')
             ->get();
 
         if ($appointments->isEmpty()) {
-            return apiResponse([], "No appointments found for $patient->user->name .", 200);
+            return apiResponse([], "No appointments found for {$patient->user->name}.", 200);
         }
 
-        $patientName = $patient->user->name;
         $appointments = AppointmentResource::collection($appointments);
-        return apiResponse($appointments, "appointments for $patientName fetched successfully.", 200);
+        return apiResponse($appointments, "Appointments for {$patient->user->name} fetched successfully.", 200);
     }
 
 
     public function indexByDoctor(Doctor $doctor)
     {
         $appointments = $doctor->appointments()
+            ->with([
+                'doctor.user',
+                'doctor.specialization',
+                'patient.user',
+            ])
             ->orderBy('appointment_date')
             ->orderBy('appointment_time')
             ->get();
 
         if ($appointments->isEmpty()) {
-            return apiResponse([], "No appointments found for $doctor->user->name .", 200);
+            return apiResponse([], "No appointments found for {$doctor->user->name}.", 200);
         }
 
-        $doctorName = $doctor->user->name;
         $appointments = AppointmentResource::collection($appointments);
-        return apiResponse($appointments, "appointments for $doctorName fetched successfully.", 200);
+        return apiResponse($appointments, "Appointments for {$doctor->user->name} fetched successfully.", 200);
     }
 
 
     public function indexByDoctorAndPatient(Doctor $doctor, Patient $patient)
     {
-        $appointments = Appointment::where('doctor_id', $doctor->id)
+        $appointments = Appointment::with([
+                'doctor.user',
+                'doctor.specialization',
+                'patient.user',
+            ])
+            ->where('doctor_id', $doctor->id)
             ->where('patient_id', $patient->id)
             ->orderBy('appointment_date')
             ->orderBy('appointment_time')
             ->get();
 
         if ($appointments->isEmpty()) {
-            return apiResponse([], "No appointments found for $patient->user->name with $doctor->user->name .", 200);
+            return apiResponse([], "No appointments found for {$patient->user->name} with {$doctor->user->name}.", 200);
         }
 
-        $patientName = $patient->user->name;
-        $doctorName = $doctor->user->name;
-
         $appointments = AppointmentResource::collection($appointments);
-        return apiResponse($appointments, "appointments for $doctorName with $patientName fetched successfully.", 200);
+        return apiResponse($appointments, "Appointments for {$doctor->user->name} with {$patient->user->name} fetched successfully.", 200);
     }
 
 

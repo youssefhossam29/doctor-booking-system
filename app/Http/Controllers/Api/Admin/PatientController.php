@@ -17,6 +17,7 @@ use App\Http\Resources\PatientResource;
 use App\Enums\UserType;
 use App\Models\User;
 use App\Models\Patient;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -31,7 +32,7 @@ class PatientController extends Controller
 
     public function index()
     {
-        $patients = Patient::latest()->get();
+        $patients = Patient::with('user')->latest()->get();
         if ($patients->isEmpty()) {
             return apiResponse([], "No patients found.", 200);
         }
@@ -53,7 +54,8 @@ class PatientController extends Controller
         }
 
         $search = $request->input('search');
-        $patients = Patient::whereHas('user', function ($query) use ($search) {
+        $patients = Patient::with('user')
+            ->whereHas('user', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%");
             })
@@ -116,13 +118,13 @@ class PatientController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $old_image = $doctor->image;
-            $old_image_path = 'uploads/users/' . $doctor->image;
+            $old_image = $patient->image;
+            $old_image_path = 'uploads/users/' . $patient->image;
 
             $newImage = $this->handleImageUpload($image);
-            $doctor->image = $newImage;
+            $patient->image = $newImage;
 
-            if (File::exists($old_image_path) && $old_image != "doctor.png") {
+            if (File::exists($old_image_path) && $old_image != "patient.png") {
                 File::delete($old_image_path);
             }
         }

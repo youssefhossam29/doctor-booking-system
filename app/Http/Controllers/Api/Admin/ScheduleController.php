@@ -16,7 +16,7 @@ class ScheduleController extends Controller
 {
     public function index(Doctor $doctor)
     {
-        $schedules = $doctor->schedules()->get();
+        $doctor->load(['user', 'schedules']);
 
         return apiResponse([
             'doctor' => [
@@ -24,8 +24,8 @@ class ScheduleController extends Controller
                 'name' => $doctor->user->name,
                 'image' => $doctor->image,
             ],
-            'schedules' => ScheduleResource::collection($schedules),
-        ], 'Doctor schedules fetched successfully');
+            'schedules' => ScheduleResource::collection($doctor->schedules),
+        ], "Schedules for Dr. {$doctor->user->name} fetched successfully.");
     }
 
     public function store(StoreScheduleRequest $request)
@@ -33,8 +33,10 @@ class ScheduleController extends Controller
         $schedule = Schedule::create($request->validated());
         $this->generateSlotsForDay($schedule);
 
+        $day = $schedule->day_of_week;
         $schedule = new ScheduleResource($schedule);
-        return apiResponse($schedule, "Schedule for $schedule->day_of_week created and slots generated");
+
+        return apiResponse($schedule, "Schedule for $day created and slots generated");
     }
 
     public function update(UpdateScheduleRequest $request, Schedule $schedule)
@@ -44,8 +46,10 @@ class ScheduleController extends Controller
         $this->deleteSlotsForDay($schedule);
         $this->generateSlotsForDay($schedule);
 
+        $day = $schedule->day_of_week;
         $schedule = new ScheduleResource($schedule);
-        return apiResponse($schedule, "Schedule for $schedule->day_of_week updated and slots regenerated");
+
+        return apiResponse($schedule, "Schedule for $day updated and slots regenerated");
     }
 
     public function destroy(Schedule $schedule)
@@ -59,10 +63,14 @@ class ScheduleController extends Controller
 
     public function repeat(Doctor $doctor)
     {
+        $doctor->load('schedules');
+
         foreach ($doctor->schedules as $schedule) {
+            $dayName = strtolower($schedule->day_of_week);
+
             $lastSlot = DoctorSlot::where('doctor_id', $doctor->id)
                 ->where('date', '>=', now()->startOfWeek())
-                ->whereRaw('LOWER(DAYNAME(date)) = ?', [strtolower($schedule->day_of_week)])
+                ->whereRaw('LOWER(DAYNAME(date)) = ?', [$dayName])
                 ->orderByDesc('date')
                 ->first();
 

@@ -83,14 +83,17 @@ class SpecializationController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function doctors(Specialization $specialization){
-        $doctors = $specialization->doctors()->latest()->get();
+        $doctors = $specialization->doctors()
+            ->with(['user', 'specialization'])
+            ->latest()
+            ->get();
 
         if ($doctors->isEmpty()) {
             return apiResponse([], "No doctors found for this specialization.", 200);
         }
 
         $doctors = DoctorResource::collection($doctors);
-        return apiResponse($doctors, "doctors fetched successfully.", 200);
+        return apiResponse($doctors, "Doctors fetched successfully.", 200);
     }
 
 }
