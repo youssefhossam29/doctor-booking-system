@@ -33,10 +33,17 @@ class ScheduleController extends Controller
         $schedule = Schedule::create($request->validated());
         $this->generateSlotsForDay($schedule);
 
-        $day = $schedule->day_of_week;
-        $schedule = new ScheduleResource($schedule);
+        return apiResponse([
+            'schedule' => new ScheduleResource($schedule),
+        ], "Schedule for {$schedule->day_of_week} created and slots generated successfully.", 201);
+    }
 
-        return apiResponse($schedule, "Schedule for $day created and slots generated");
+
+    public function show(Schedule $schedule)
+    {
+        return apiResponse([
+            'schedule' => new ScheduleResource($schedule),
+        ], "Schedule for {$schedule->day_of_week} fetched successfully.");
     }
 
     public function update(UpdateScheduleRequest $request, Schedule $schedule)
@@ -46,10 +53,9 @@ class ScheduleController extends Controller
         $this->deleteSlotsForDay($schedule);
         $this->generateSlotsForDay($schedule);
 
-        $day = $schedule->day_of_week;
-        $schedule = new ScheduleResource($schedule);
-
-        return apiResponse($schedule, "Schedule for $day updated and slots regenerated");
+        return apiResponse([
+            'schedule' => new ScheduleResource($schedule),
+        ], "Schedule for {$schedule->day_of_week} updated and slots regenerated successfully.");
     }
 
     public function destroy(Schedule $schedule)
@@ -74,16 +80,14 @@ class ScheduleController extends Controller
                 ->orderByDesc('date')
                 ->first();
 
-            if ($lastSlot) {
-                $nextDate = Carbon::parse($lastSlot->date)->addWeek();
-            } else {
-                $nextDate = now()->next(strtolower($schedule->day_of_week));
-            }
+            $nextDate = $lastSlot
+                ? Carbon::parse($lastSlot->date)->addWeek()
+                : now()->next(strtolower($schedule->day_of_week));
 
             $start = Carbon::parse("{$nextDate->format('Y-m-d')} {$schedule->start_time}");
             $end = Carbon::parse("{$nextDate->format('Y-m-d')} {$schedule->end_time}");
 
-            while ($start < $end) {
+            while ($start->lt($end)) {
                 $slotEnd = $start->copy()->addMinutes($schedule->slot_duration);
 
                 DoctorSlot::firstOrCreate([
@@ -128,22 +132,18 @@ class ScheduleController extends Controller
 
     protected function deleteSlotsForDay(Schedule $schedule)
     {
-        $date = $this->getDateForDay($schedule->day_of_week);
         DoctorSlot::where('doctor_id', $schedule->doctor_id)
-            ->where('date', $date)
+            ->whereRaw('LOWER(DAYNAME(date)) = ?', [strtolower($schedule->day_of_week)])
             ->delete();
     }
 
     protected function getDateForDay(string $day_of_week): ?string
     {
         $today = now();
-        for ($i = 0; $i < 7; $i++) {
-            $date = $today->copy()->addDays($i);
-            if (strtolower($date->format('l')) === strtolower($day_of_week)) {
-                return $date->format('Y-m-d');
-            }
-        }
-        return null;
+        return strtolower($today->format('l')) === strtolower($day_of_week)
+            ? $today->format('Y-m-d')
+            : $today->next($day_of_week)->format('Y-m-d');
     }
 
 }
+

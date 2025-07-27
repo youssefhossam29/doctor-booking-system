@@ -107,6 +107,7 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
     Route::controller(App\Http\Controllers\Api\Admin\ScheduleController::class)->prefix('schedules')->name('schedules.')->group(function () {
         Route::get('/doctor/{doctor}', 'index')->name('index');
         Route::post('/', 'store')->name('store');
+        Route::get('/{schedule}', 'show')->name('show');
         Route::put('/{schedule}', 'update')->name('update');
         Route::delete('/{schedule}', 'destroy')->name('destroy');
         Route::post('/doctor/{doctor}/repeat',  'repeat')->name('repeat');
