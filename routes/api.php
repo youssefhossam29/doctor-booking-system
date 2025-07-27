@@ -59,6 +59,13 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
         Route::post('/repeat',  'repeat')->name('repeat');
     });
 
+    // Slot Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\SlotController::class)->prefix('slots')->name('slots.')->group(function () {
+        Route::get('/', 'indexByDate')->name('index.byDate');
+        Route::delete('/', 'destroyByDate')->name('destroy.byDate');
+        Route::delete('/{doctorSlot}', 'destroy')->name('destroy');
+    });
+
 });
 
 
