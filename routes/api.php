@@ -49,6 +49,16 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
         Route::delete('/', 'destroy')->name('destroy');
     });
 
+    // Schedule Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\ScheduleController::class)->prefix('schedules')->name('schedules.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{schedule}', 'show')->name('show');
+        Route::put('/{schedule}', 'update')->name('update');
+        Route::delete('/{schedule}', 'destroy')->name('destroy');
+        Route::post('/repeat',  'repeat')->name('repeat');
+    });
+
 });
 
 
