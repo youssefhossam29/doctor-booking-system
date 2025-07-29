@@ -66,6 +66,13 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
         Route::delete('/{doctorSlot}', 'destroy')->name('destroy');
     });
 
+    // Patients Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\PatientController::class)->prefix('patients')->name('patients.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/{patient}', 'show')->name('show');
+    });
+
 });
 
 
