@@ -130,20 +130,24 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        $appointment->appointment_date = $request->input('appointment_date', $appointment->appointment_date);
-        $appointment->appointment_time = $request->input('appointment_time', $appointment->appointment_time);
+        $oldDate = $appointment->appointment_date;
+        $oldTime = $appointment->appointment_time;
+        $newDate = $request->appointment_date;
+        $newTime = $request->appointment_time;
+
+        if ($oldDate !== $newDate || $oldTime !== $newTime) {
+            $this->markSlotAsAvailable($appointment->doctor_id, $oldDate, $oldTime);
+        }
+
+        $appointment->appointment_date = $newDate;
+        $appointment->appointment_time = $newTime;
         $appointment->status = $request->input('status', $appointment->status);
         $appointment->notes = $request->input('notes', $appointment->notes);
         $appointment->save();
 
-        $this->markSlotAsUnavailable(
-            $appointment->doctor_id,
-            $request->appointment_date,
-            $request->appointment_time
-        );
+        $this->markSlotAsUnavailable($appointment->doctor_id, $newDate, $newTime);
 
-        $appointment = new AppointmentResource($appointment);
-        return apiResponse($appointment, "Appointment updated successfully", 200);
+        return apiResponse(new AppointmentResource($appointment), "Appointment updated successfully", 200);
     }
 
 
