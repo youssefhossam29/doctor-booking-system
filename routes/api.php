@@ -73,6 +73,17 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
         Route::get('/{patient}', 'show')->name('show');
     });
 
+    // Appointment Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\AppointmentController::class)->prefix('appointments')->name('appointments.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/between-dates', 'appointmentsBetweenDates')->name('appointments.betweenDates');
+        Route::get('/{appointment}', 'show')->name('show');
+        Route::put('/{appointment}', 'update')->name('update');
+        Route::put('/cancel/{appointment}', 'cancel')->name('cancel');
+        Route::get('/patient/{patient}',  'indexByPatient');
+    });
+
 });
 
 
