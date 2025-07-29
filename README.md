@@ -21,7 +21,6 @@ It handles real-world logic such as managing doctor schedules, generating appoin
 
 The project offers a clear separation of responsibilities and is ideal for use in real medical platforms or educational systems needing robust booking features.
 
-
 ---
 
 ## 🚀 Features
@@ -68,6 +67,44 @@ The project offers a clear separation of responsibilities and is ideal for use i
 
 ---
 
+### 🩺 Doctor Features
+
+- **Account Management**
+  - Login to his account
+  - Logout from his account
+  - Change password
+  - View own account
+  - Update own account (excluding specialization)
+  - Delete own account
+
+- **Schedule Management**
+  - Create new schedule
+  - View own schedule
+  - Update schedule
+  - Delete schedule
+  - Repeat weekly schedule
+
+- **Slot Management**
+  - View available slots by date
+  - Delete all slots for a given date
+  - Delete specific slot
+
+- **Patient Management**
+  - View list of patients who have appointments with him
+  - View individual patient account
+  - Search for patients by name
+
+- **Appointment Management**
+  - View all appointments with all patients
+  - View appointments for a specific patient
+  - Update appointment (with conflict and slot validation)
+  - Cancel appointment (releasing slot)
+  - View single appointment
+  - Search appointments by patient name
+  - Filter appointments between two dates
+
+---
+
 ## 🧱 Technologies
 
 - PHP 8.1+  
@@ -92,7 +129,7 @@ enum UserType: int
     case DOCTOR = 2;
     case ADMIN = 3;
 }
-```
+````
 
 ## 🛠 Getting Started
 
@@ -150,13 +187,11 @@ See `App\Enums\UserType`. All users are distinguished using a single `type` colu
 
 The `CheckTypes` middleware restricts route access by mapping role names (e.g., `'admin'`, `'doctor'`, `'patient'`) to `UserType` enum values and aborts with a 403 if the authenticated user’s type is not allowed.
 
-
 ### 3. API Route Structure
 
 Protected using `auth:sanctum` and `CheckTypes` middleware in `api.php`.
 
 ```php
-
 // Role-based routes
 Route::prefix('admin')->middleware(['auth:sanctum', 'CheckTypes:admin'])->group(...);
 Route::prefix('doctor')->middleware(['auth:sanctum', 'CheckTypes:doctor'])->group(...);
