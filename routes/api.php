@@ -129,6 +129,7 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::delete('/{patient}', 'destroy')->name('destroy');
     });
 
+    // Schedule Routes
     Route::controller(App\Http\Controllers\Api\Admin\ScheduleController::class)->prefix('schedules')->name('schedules.')->group(function () {
         Route::get('/doctor/{doctor}', 'index')->name('index');
         Route::post('/', 'store')->name('store');
@@ -138,7 +139,7 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::post('/doctor/{doctor}/repeat',  'repeat')->name('repeat');
     });
 
-
+    // Slot Routes
     Route::controller(App\Http\Controllers\Api\Admin\SlotController::class)->prefix('slots')->name('slots.')->group(function () {
         Route::get('/', 'indexByDoctorAndDate')->name('index.byDoctor.andDate');
         Route::delete('/', 'destroyByDoctorAndDate')->name('destroy.byDoctor.andDate');
@@ -172,6 +173,12 @@ Route::middleware(['auth:sanctum', 'CheckTypes:patient'])->prefix('patient')->na
         Route::delete('/', 'destroy')->name('destroy');
     });
 
+    // Doctor Profile Routes
+    Route::controller(App\Http\Controllers\Api\Patient\DoctorController::class)->prefix('doctors')->name('doctors.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/{doctor}', 'show')->name('show');
+    });
 });
 
 
