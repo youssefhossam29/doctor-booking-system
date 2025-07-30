@@ -179,6 +179,14 @@ Route::middleware(['auth:sanctum', 'CheckTypes:patient'])->prefix('patient')->na
         Route::get('/search', 'search')->name('search');
         Route::get('/{doctor}', 'show')->name('show');
     });
+
+    // Specialization Routes
+    Route::controller(App\Http\Controllers\Api\Patient\SpecializationController::class)->prefix('specializations')->name('specializations.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/{specialization}/doctors', 'doctors')->name('doctors');
+    });
+
 });
 
 
