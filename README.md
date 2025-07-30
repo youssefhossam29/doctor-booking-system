@@ -16,7 +16,7 @@ It handles real-world logic such as managing doctor schedules, generating appoin
 - 🧑‍💼 **Admin-driven control** over doctors, patients, specializations, and appointments
 - ✅ **Custom request validation** and conflict checking for appointment logic
 - 🔁 **Automatic slot availability** updates on booking and cancellation
-- 🔒 **API authentication & authorization** powered by Laravel Sanctum
+- 🔒 **API authentication & authorization** powered by Laravel Sanctum and Policies
 - 📂 **Modular and clean controller structure** for scalability and testing
 
 The project offers a clear separation of responsibilities and is ideal for use in real medical platforms or educational systems needing robust booking features.
@@ -27,13 +27,14 @@ The project offers a clear separation of responsibilities and is ideal for use i
 
 ### 🔐 Authentication & Authorization
 
-- Multi-role authentication (Patient, Doctor, Admin)
-- Login / Register for patients
-- Login for doctors
-- Change password, update data, and delete account for all users (where applicable)
-- Middleware-based role access control
+- Multi-role authentication (Patient, Doctor, Admin)  
+- Change password, update data, and delete account for all users (where applicable)  
+- Middleware-based role access control  
+- **Authorization via Laravel Policies** to restrict access to resources like appointments—ensuring only the owner (patient or doctor) can view, update, or cancel
 
-### 👨‍⚕️ Admin Features
+---
+
+### 👨‍💼 Admin Features
 
 - **Doctor Management**
   - Add, update (with specialization), delete, show one/all
@@ -105,6 +106,37 @@ The project offers a clear separation of responsibilities and is ideal for use i
 
 ---
 
+### 👤 Patient Features
+
+- **Account Management**
+  - Create an account
+  - Login to his account
+  - Logout from his account
+  - Change his password
+  - Show his account
+  - Update his account
+  - Delete his account
+
+- **Doctor & Specialization**
+  - Show all doctors
+  - View doctor profile and doctor’s schedule
+  - Search for doctor by name or specialization
+  - Show all specializations
+  - Search for specialization
+  - Show all doctors belonging to specific specialization
+
+- **Appointment Management**
+  - Show his appointments with all doctors
+  - Show his appointments with specific doctor
+  - Add appointment
+  - Update appointment
+  - Cancel appointment
+  - Show appointment
+  - Search for appointments using doctor name
+  - Select appointments between two dates
+
+---
+
 ## 🧱 Technologies
 
 - PHP 8.1+  
@@ -130,6 +162,8 @@ enum UserType: int
     case ADMIN = 3;
 }
 ````
+
+---
 
 ## 🛠 Getting Started
 
