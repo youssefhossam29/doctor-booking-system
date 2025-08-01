@@ -160,6 +160,17 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
         Route::get('/patient/{patient}',  'indexByPatient');
         Route::get('/doctor/{doctor}/patient/{patient}',  'indexByDoctorAndPatient');
     });
+
+    // Contact Routes
+    Route::controller(App\Http\Controllers\Api\Admin\ContactController::class)->prefix('contacts')->name('contacts.')->group(function () {
+        Route::get('/', 'index')->name('index');//
+        Route::get('/search', 'search')->name('search');//
+        Route::get('/{contact}/replies', 'replies')->name('replies');//
+        Route::post('/{contact}/reply', 'reply')->name('reply');//
+        Route::put('/{contact}', 'update')->name('update');
+        Route::get('/{contact}', 'show')->name('show');
+    });
+
 });
 
 
