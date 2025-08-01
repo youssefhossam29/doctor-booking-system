@@ -84,6 +84,16 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
         Route::get('/patient/{patient}',  'indexByPatient');
     });
 
+    // Contact Routes
+    Route::controller(App\Http\Controllers\Api\Doctor\ContactController::class)->prefix('contacts')->name('contacts.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{contact}/replies', 'replies')->name('replies');
+        Route::post('/{contact}/reply', 'reply')->name('reply');
+        Route::get('/{contact}', 'show')->name('show');
+    });
+
 });
 
 
@@ -163,10 +173,10 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
 
     // Contact Routes
     Route::controller(App\Http\Controllers\Api\Admin\ContactController::class)->prefix('contacts')->name('contacts.')->group(function () {
-        Route::get('/', 'index')->name('index');//
-        Route::get('/search', 'search')->name('search');//
-        Route::get('/{contact}/replies', 'replies')->name('replies');//
-        Route::post('/{contact}/reply', 'reply')->name('reply');//
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        Route::get('/{contact}/replies', 'replies')->name('replies');
+        Route::post('/{contact}/reply', 'reply')->name('reply');
         Route::put('/{contact}', 'update')->name('update');
         Route::get('/{contact}', 'show')->name('show');
     });
