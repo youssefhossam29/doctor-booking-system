@@ -34,7 +34,7 @@ class Contact extends Model
      */
     public function replies(): HasMany
     {
-        return $this->hasMany(ContactReply::class);
+        return $this->hasMany(ContactReply::class)->latest();;
     }
 
     /**
