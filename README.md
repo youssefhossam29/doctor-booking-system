@@ -4,6 +4,9 @@ This is a Laravel 10-based project that provides a complete **doctor appointment
 
 It handles real-world logic such as managing doctor schedules, generating appointment slots, booking and updating appointments, and securing data access through user roles and middleware. The system is API-first and ready to power mobile or web clients.
 
+The project includes a contact module where **patients**, **doctors**, and **admins** can interact through structured messages and replies.
+
+
 ---
 
 ## 🔍 Overview
@@ -13,13 +16,12 @@ It handles real-world logic such as managing doctor schedules, generating appoin
 - 🧑‍⚕️ **Doctor–Patient appointment bookings**
 - 📅 **Doctor schedules and dynamic slot generation**
 - 🔐 **Role-based access control** using enums and middleware
-- 🧑‍💼 **Admin-driven control** over doctors, patients, specializations, and appointments
+- 🧑‍💼 **Admin-driven control** over doctors, patients, specializations, appointments, and contact requests
 - ✅ **Custom request validation** and conflict checking for appointment logic
 - 🔁 **Automatic slot availability** updates on booking and cancellation
 - 🔒 **API authentication & authorization** powered by Laravel Sanctum and Policies
 - 📂 **Modular and clean controller structure** for scalability and testing
-
-The project offers a clear separation of responsibilities and is ideal for use in real medical platforms or educational systems needing robust booking features.
+- 💬 **Contact/Support system** allowing users to submit and reply to support messages
 
 ---
 
@@ -35,6 +37,11 @@ The project offers a clear separation of responsibilities and is ideal for use i
 ---
 
 ### 👨‍💼 Admin Features
+
+- **Account Management**
+  - Login, logout, change password
+  - View and update own account (excluding specialization)
+  - Delete own account
 
 - **Doctor Management**
   - Add, update (with specialization), delete, show one/all
@@ -66,75 +73,76 @@ The project offers a clear separation of responsibilities and is ideal for use i
   - Prevents double-booking and ensures slot availability
   - Search appointments by doctor/patient name
 
+- **Contact Management**
+  - View all contact requests (with filters for status/user)
+  - Search contact requests by user name, email, subject, or message
+  - View specific contact and all related replies
+  - Reply to user messages
+  - Update status (`open` or `closed`) for any contact
+
 ---
 
 ### 🩺 Doctor Features
 
 - **Account Management**
-  - Login to his account
-  - Logout from his account
-  - Change password
-  - View own account
-  - Update own account (excluding specialization)
+  - Login, logout, change password
+  - View and update own account (excluding specialization)
   - Delete own account
 
 - **Schedule Management**
-  - Create new schedule
-  - View own schedule
-  - Update schedule
-  - Delete schedule
+  - Create, view, update, and delete own schedule
   - Repeat weekly schedule
 
 - **Slot Management**
   - View available slots by date
-  - Delete all slots for a given date
-  - Delete specific slot
+  - Delete all or specific slots for a given date
 
 - **Patient Management**
   - View list of patients who have appointments with him
   - View individual patient account
-  - Search for patients by name
+  - Search patients by name
 
 - **Appointment Management**
-  - View all appointments with all patients
-  - View appointments for a specific patient
-  - Update appointment (with conflict and slot validation)
-  - Cancel appointment (releasing slot)
-  - View single appointment
-  - Search appointments by patient name
-  - Filter appointments between two dates
+  - View all appointments with patients
+  - Filter/search appointments by name or date
+  - Update or cancel appointments
+
+- **Contact System**
+  - Submit new contact requests to the admin
+  - View own contact requests (filter by status)
+  - View specific contact and all related replies
+  - Search own contact requests by user subject, or message
+  - Reply to admin messages
 
 ---
 
 ### 👤 Patient Features
 
 - **Account Management**
-  - Create an account
-  - Login to his account
-  - Logout from his account
-  - Change his password
-  - Show his account
-  - Update his account
-  - Delete his account
+  - Register, login, logout
+  - Change password
+  - View, update, or delete own account
 
 - **Doctor & Specialization**
   - Show all doctors
   - View doctor profile and doctor’s schedule
   - Search for doctor by name or specialization
   - Show all specializations
-  - Search for specialization
-  - Show all doctors belonging to specific specialization
+  - Search specializations
+  - List doctors under a specific specialization
 
 - **Appointment Management**
-  - Show his appointments with all doctors
-  - Show his appointments with specific doctor
-  - Add appointment
-  - Update appointment
-  - Cancel appointment
-  - Show appointment
-  - Search for appointments using doctor name
-  - Select appointments between two dates
+  - View all or specific appointments with doctors
+  - Filter/search appointments
+  - Add, update, cancel appointment
 
+- **Contact System**
+  - Submit new contact requests to the admin
+  - View own contact requests (filter by status)
+  - View specific contact and all related replies
+  - Search own contact requests by user subject, or message
+  - Reply to admin messages
+  
 ---
 
 ## 🧱 Technologies
