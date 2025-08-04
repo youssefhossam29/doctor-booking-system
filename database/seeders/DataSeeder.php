@@ -14,6 +14,8 @@ use App\Models\Schedule;
 use App\Models\DoctorSlot;
 use App\Models\Patient;
 use App\Models\Appointment;
+use App\Models\Contact;
+use App\Models\ContactReply;
 
 use Carbon\Carbon;
 
@@ -33,7 +35,6 @@ class DataSeeder extends Seeder
         foreach ($specializations as $spec) {
             Specialization::create(['name' => $spec]);
         }
-
 
         // create admin
         $adminUser = User::create([
@@ -117,6 +118,24 @@ class DataSeeder extends Seeder
                 // Mark slot as unavailable
                 $slot->update(['is_available' => 0]);
             }
+        });
+
+        // Generate Contacts + Replies
+        User::whereIn('type', [UserType::DOCTOR, UserType::PATIENT])->get()->each(function ($user) use ($adminUser) {
+
+            // Generate two Contacts foreach user
+            Contact::factory(2)->create([
+                'user_id'   => $user->id,
+                'user_type' => $user->type,
+            ])->each(function ($contact) use ($adminUser) {
+
+                // Generate reply from admin foreach contact
+                ContactReply::factory()->create([
+                    'contact_id' => $contact->id,
+                    'user_id'    => $adminUser->id,
+                    'user_type'  => $adminUser->type,
+                ]);
+            });
         });
     }
 }
