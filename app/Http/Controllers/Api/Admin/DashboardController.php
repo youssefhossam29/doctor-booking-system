@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $today = Carbon::today();
         $weekStart = Carbon::now()->startOfWeek();
         $weekEnd = Carbon::now()->endOfWeek();
-        $last7Days = Carbon::now()->subDays(7);
+        $last7Days = Carbon::now()->subDays(6);
 
         // Basic Counts
         $doctorsCount = Doctor::count();
