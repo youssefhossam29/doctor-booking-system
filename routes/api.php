@@ -37,7 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->name('logout');
 });
 
-    Route::get('/dashboard',[App\Http\Controllers\Api\Doctor\DashboardController::class, 'index'])->name('dashboard.index');
 
 
 // Doctor Routes
@@ -193,6 +192,9 @@ Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('
 
 // Patient Routes
 Route::middleware(['auth:sanctum', 'CheckTypes:patient'])->prefix('patient')->name('patient.')->group(function () {
+
+    // Dashboard Routes
+    Route::get('/dashboard',[App\Http\Controllers\Api\Patient\DashboardController::class, 'index'])->name('dashboard.index');
 
     // Profile Routes
     Route::controller(App\Http\Controllers\Api\Patient\PatientController::class)->prefix('profile')->name('profile.')->group(function () {
