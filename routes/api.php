@@ -96,10 +96,12 @@ Route::middleware(['auth:sanctum', 'CheckTypes:doctor'])->prefix('doctor')->name
 
 });
 
+    Route::get('/dashboard',[App\Http\Controllers\Api\Admin\DashboardController::class, 'index'])->name('dashboard.index');
 
 
 // Admin Routes
 Route::middleware(['auth:sanctum', 'CheckTypes:admin'])->prefix('admin')->name('admin.')->group(function () {
+
 
     // Admin Profile Routes
     Route::controller(App\Http\Controllers\Api\Admin\AdminController::class)->group(function () {
